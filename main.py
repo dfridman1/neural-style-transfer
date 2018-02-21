@@ -11,7 +11,6 @@ from solver import Solver
 
 
 def load_image(path):
-    print('loading image')
     return Image.open(path)
 
 
