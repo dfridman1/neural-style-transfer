@@ -1,0 +1,7 @@
+*.pyc
+.floydexpt
+.floydignore
+floyd_requirements.txt
+.idea/
+.ipynb_checkpoints/
+__pycache__
