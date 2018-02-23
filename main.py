@@ -9,13 +9,17 @@ from torch.autograd import Variable
 from neural_style_net import NeuralStyleNet
 from solver import Solver
 
+from io import BytesIO
+import requests
+
 
 def load_image(path):
     return Image.open(path)
 
 
 def load_image_from_url(url):
-    raise NotImplementedError
+    response = requests.get(url)
+    return Image.open(BytesIO(response.content))
 
 
 def load_features_extractor(model_name):
