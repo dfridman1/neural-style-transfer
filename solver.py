@@ -1,20 +1,22 @@
 import torch
-import torch.nn as nn
 import torch.optim as optim
+from torch.autograd import Variable
 from torchvision.transforms import ToPILImage
 
 from neural_style_net import ContentLoss, StyleLoss
 
 
 class Solver(object):
-    def __init__(self, model, content_var, style_var, num_iters=200, gpu=False):
+    def __init__(self, model, content_var, style_var,
+                 content_weight=1, style_weight=1000,
+                 num_iters=200, gpu=False):
         self.model = model
         self.input_var, self.content_var, self.style_var = self._prepare_input(content_var, style_var, gpu)
         self.num_iters = num_iters
         self.gpu = gpu
 
-        self.content_criterion = ContentLoss()
-        self.style_criterion = StyleLoss()
+        self.content_criterion = ContentLoss(weight=content_weight)
+        self.style_criterion = StyleLoss(weight=style_weight)
         self.optimizer = optim.LBFGS([self.input_var])
 
     @staticmethod
@@ -25,7 +27,7 @@ class Solver(object):
             dtype = torch.cuda.FloatTensor
         else:
             dtype = torch.FloatTensor
-        input_var = nn.Parameter(input_tensor.type(dtype))
+        input_var = Variable(input_tensor.type(dtype), requires_grad=True)
         return input_var, content_var, style_var
 
     def train(self):
