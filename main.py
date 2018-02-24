@@ -33,7 +33,7 @@ def load_variable(pil_image, gpu=False):
     im_size = 512 if gpu else 224
     dtype = torch.cuda.FloatTensor if gpu else torch.FloatTensor
     tsfm = transforms.Compose([
-        transforms.Scale(im_size),
+        transforms.Resize((im_size, im_size)),
         transforms.ToTensor()
     ])
     tensor = tsfm(pil_image)
