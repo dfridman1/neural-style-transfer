@@ -18,7 +18,7 @@ class NeuralStyleNet(nn.Module):
         content, style = self.content_variable, self.style_variable
         outputs = defaultdict(list)
         for layer in list(self.features):
-            x, content, style = layer(x), layer(content), layer(style)
+            x, content, style = layer(x.clone()), layer(content.clone()), layer(style.clone())
             if isinstance(layer, nn.Conv2d):
                 i += 1
                 name = 'conv_' + str(i)
