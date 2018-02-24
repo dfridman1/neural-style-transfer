@@ -46,7 +46,7 @@ class Solver(object):
                 for name, x in input_outputs['style'].items():
                     y = style_outputs['style'][name]
                     style_loss += self.style_criterion(x, y)
-                if True or it[0] % 50 == 0:
+                if it[0] % 50 == 0:
                     print('it: {}, content: {}, style: {}'.format(it[0], content_loss.data[0], style_loss.data[0]))
                 total_loss = content_loss + style_loss
                 total_loss.backward()
