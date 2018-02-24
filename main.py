@@ -79,7 +79,7 @@ def main():
     style_var = load_variable(style_image, gpu=gpu)
 
     net = load_features_extractor(args.net)
-    model = NeuralStyleNet(net, content_var, style_var)
+    model = NeuralStyleNet(net)
     if gpu:
         model.cuda()
 

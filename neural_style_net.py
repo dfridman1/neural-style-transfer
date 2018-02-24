@@ -2,30 +2,34 @@ from collections import defaultdict
 
 import torch.nn as nn
 
-content_layers_default = ['conv_4']
-style_layers_default = ['conv_1', 'conv_2', 'conv_3', 'conv_4', 'conv_5']
-
 
 class NeuralStyleNet(nn.Module):
-    def __init__(self, features, content_variable, style_variable):
+    def __init__(self, features, content_layers=('conv_4',),
+                 style_layers=('conv_1', 'conv_2', 'conv_3', 'conv_4', 'conv_5')):
         super(NeuralStyleNet, self).__init__()
         self.features = features
-        self.content_variable = content_variable
-        self.style_variable = style_variable
+        self.content_layers = content_layers
+        self.style_layers = style_layers
 
     def forward(self, x):
         i = 0
-        content, style = self.content_variable, self.style_variable
-        outputs = defaultdict(list)
+        content_outputs, style_outputs = {}, {}
         for layer in list(self.features):
-            x, content, style = layer(x.clone()), layer(content.clone()), layer(style.clone())
+            x = layer(x.clone())
             if isinstance(layer, nn.Conv2d):
                 i += 1
                 name = 'conv_' + str(i)
-                if name in content_layers_default:
-                    outputs['content'].append((x, content))
-                if name in style_layers_default:
-                    outputs['style'].append((x, style))
+            elif isinstance(layer, nn.MaxPool2d):
+                name = 'pool_' + str(i)
+            elif isinstance(layer, nn.ReLU):
+                name = 'relu_' + str(i)
+            else:
+                raise ValueError()
+            if name in self.content_layers:
+                content_outputs[name] = x
+            if name in self.style_layers:
+                style_outputs[name] = x
+        outputs = {'content': content_outputs, 'style': style_outputs}
         return outputs
 
 

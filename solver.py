@@ -31,26 +31,27 @@ class Solver(object):
         return input_var, content_var, style_var
 
     def train(self):
-        iteration = [0]
-        while iteration[0] <= self.num_iters:
+        content_outputs = self.model(self.content_var)
+        style_outputs = self.model(self.style_var)
+        it = [0]
+        while it[0] <= self.num_iters:
             def closure():
                 self.optimizer.zero_grad()
                 self.input_var.data.clamp_(0, 1)
-                outputs = self.model(self.input_var)
-                style_loss = content_loss = 0
-                for x, y in outputs['content']:
-                    loss = self.content_criterion(x, y)
-                    content_loss += loss
-                    loss.backward(retain_graph=True)
-                for x, y in outputs['style']:
-                    loss = self.style_criterion(x, y)
-                    style_loss += loss
-                    loss.backward(retain_graph=True)
-                if iteration[0] % 50 == 0:
-                    print(
-                        'it: {}, content: {}, style: {}'.format(iteration[0], content_loss.data[0], style_loss.data[0]))
-                iteration[0] += 1
-                return content_loss + style_loss
+                input_outputs = self.model(self.input_var)
+                content_loss = style_loss = 0
+                for name, x in input_outputs['content'].items():
+                    y = content_outputs['content'][name]
+                    content_loss += self.content_criterion(x, y)
+                for name, x in input_outputs['style'].items():
+                    y = style_outputs['style'][name]
+                    style_loss += self.style_criterion(x, y)
+                if True or it[0] % 50 == 0:
+                    print('it: {}, content: {}, style: {}'.format(it[0], content_loss.data[0], style_loss.data[0]))
+                total_loss = content_loss + style_loss
+                total_loss.backward()
+                it[0] += 1
+                return total_loss
 
             self.optimizer.step(closure)
         self.input_var.data.clamp_(0, 1)
