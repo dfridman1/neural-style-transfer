@@ -75,10 +75,12 @@ dependencies:
 - pytorch=0.3.1=py36_cuda0.0_cudnn0.0_2
 - torchvision=0.2.0=py36hf5eb7ec_1
 - pip:
+  - graphviz==0.8.2
   - ipython-genutils==0.2.0
   - jupyter-client==5.2.2
   - jupyter-core==4.4.0
   - prompt-toolkit==1.0.15
+  - pyyaml==3.12
   - torch==0.3.1.post2
 prefix: /anaconda3/envs/neural-style
 
