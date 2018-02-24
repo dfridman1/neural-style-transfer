@@ -29,11 +29,18 @@ def load_features_extractor(model_name):
     return net.features
 
 
+def get_resize_transform(im_size):
+    transform_op = getattr(transforms, 'Resize', None)
+    if transform_op is None:
+        transform_op = transforms.Scale
+    return transform_op((im_size, im_size))
+
+
 def load_variable(pil_image, gpu=False):
     im_size = 512 if gpu else 224
     dtype = torch.cuda.FloatTensor if gpu else torch.FloatTensor
     tsfm = transforms.Compose([
-        transforms.Resize((im_size, im_size)),
+        get_resize_transform(im_size),
         transforms.ToTensor()
     ])
     tensor = tsfm(pil_image)
