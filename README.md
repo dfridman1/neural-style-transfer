@@ -2,10 +2,11 @@
 
 This is a PyTorch implementation of [A Neural Algorithm of Artistic Style](https://arxiv.org/abs/1508.06576).
 
-
-<img src="images/style/picasso.jpg" height="256" width="256">
-<img src="images/content/brad_pitt.jpg" height="256" width="256">
-<img src="images/output/brad_pitt_picasso.png" height="256" width="256">
+<div style="display:inline-block">
+    <img src="images/style/picasso.jpg" height="256" width="256">
+    <img src="images/content/brad_pitt.jpg" height="256" width="256">
+    <img src="images/output/brad_pitt_picasso.png" height="256" width="256">
+</div>
 
 ## Usage
 ```
